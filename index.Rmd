@@ -1,6 +1,6 @@
 ---
-title: " " #replace the title with something short and catchy to represent your project
-subtitle: "____'s Data Science Portfolio" #replace blank with your name
+title: "Education Outcomes in the U.S. - Who makes it...and who doesn't" 
+subtitle: "Daniel Kirkland's Data Science Portfolio" #replace blank with your name
 output:
   html_document:
     df_print: paged
@@ -8,11 +8,11 @@ output:
 
 ## Abstract
 
-In under 250 words give a brief summary of the project so far.
+In order to ask interesting questions about the higher education outcomes for U.S. residents, a dataset which contained a sufficient number of variables and records was found and imported into RStudio.   
 
 ### 1. Discovery and Data Preparation
 
-Provide a one-sentence introduction with what is covered by the first deliverable along with a link to another html page that gives the details.
+Data from the 'Education Scorecard' dataset has been imported into RStudio for processing using the R programming language and tools. 
 
 ### 2. Model Planning and Building
 
