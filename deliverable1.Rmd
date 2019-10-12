@@ -1,0 +1,59 @@
+---
+title: "Education Outcomes"
+output:
+  html_document:
+    df_print: paged
+name: Daniel Kirkland
+---
+
+In order to ask interesting questions about the educational outcomes of students attending college in the United States, we will explore a dataset called 'College Scorecard'.  This dataset as been sourced from collegescorecard.ed.gov/data/.  Per the website, the dataset was 
+
+    "...designed to increase transparency, putting the 
+    power in the hands of the public - from those  
+    choosing colleges to those improving colege quality - to 
+    see how well different schools are serving their students." 
+The goal of this data science project is to use demographics to identify potential patterns or factors which are found among those who do and do not achieve success when pursing higher education.  
+
+First, we must import the data in .csv format. As there exists historical data in separate .csv files for each year between 1996 - 2018, inclusive, a dataset for each year of interest will be imported to that more data will be available for analysis.  
+
+    Steps: > import the 'tidyverse' library
+           > create variables and store imported datasets 
+
+
+```{r results='hide'}
+  library(tidyverse)
+
+#CY17 <- read_csv("CollegeScorecard_Raw_Data/MERGED2017_18_PP.csv")
+CY16 <- read_csv("CollegeScorecard_Raw_Data/MERGED2016_17_PP.csv")
+#CY15 <- read_csv("CollegeScorecard_Raw_Data/MERGED2015_16_PP.csv")
+#CY14 <- read_csv("CollegeScorecard_Raw_Data/MERGED2014_15_PP.csv")
+#CY13 <- read_csv("CollegeScorecard_Raw_Data/MERGED2013_14_PP.csv")
+#CY12 <- read_csv("CollegeScorecard_Raw_Data/MERGED2012_13_PP.csv")
+#CY11 <- read_csv("CollegeScorecard_Raw_Data/MERGED2011_12_PP.csv")
+#CY10 <- read_csv("CollegeScorecard_Raw_Data/MERGED2010_11_PP.csv")
+#CY09 <- read_csv("CollegeScorecard_Raw_Data/MERGED2009_10_PP.csv")
+#CY08 <- read_csv("CollegeScorecard_Raw_Data/MERGED2008_09_PP.csv")
+#CY07 <- read_csv("CollegeScorecard_Raw_Data/MERGED2007_08_PP.csv")
+#CY06 <- read_csv("CollegeScorecard_Raw_Data/MERGED2006_07_PP.csv")
+#CY05 <- read_csv("CollegeScorecard_Raw_Data/MERGED2005_06_PP.csv")
+#CY04 <- read_csv("CollegeScorecard_Raw_Data/MERGED2004_05_PP.csv")
+#CY03 <- read_csv("CollegeScorecard_Raw_Data/MERGED2003_04_PP.csv")
+#CY02 <- read_csv("CollegeScorecard_Raw_Data/MERGED2002_03_PP.csv")
+#CY01 <- read_csv("CollegeScorecard_Raw_Data/MERGED2001_02_PP.csv")
+#CY00 <- read_csv("CollegeScorecard_Raw_Data/MERGED2000_01_PP.csv")
+#CY99 <- read_csv("CollegeScorecard_Raw_Data/MERGED1999_00_PP.csv")
+#CY98 <- read_csv("CollegeScorecard_Raw_Data/MERGED1998_99_PP.csv")
+#CY97 <- read_csv("CollegeScorecard_Raw_Data/MERGED1997_98_PP.csv")
+#CY96 <- read_csv("CollegeScorecard_Raw_Data/MERGED1996_97_PP.csv")
+
+```
+
+
+Each of the datasets, for each respective year, has identical column names.  For the purposes of the inquiries which will be made of the datasets, a majority of the column names included in the raw dataset will be excluded by building a tibble which includes the column variables of interest.  
+
+```{r}
+nrow(CY16)
+ncol(CY16)
+
+```
+
