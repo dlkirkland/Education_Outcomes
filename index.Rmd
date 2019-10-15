@@ -6,13 +6,15 @@ output:
     df_print: paged
 ---
 
+
+
 ## Abstract
 
 In order to ask interesting questions about the higher education outcomes for U.S. residents, a dataset which contained a sufficient number of variables and records was found and imported into RStudio.   
 
-### 1. Discovery and Data Preparation
+### 1. [Discovery and Data Preparation](deliverable1.html)
 
-Data from the 'Education Scorecard' dataset has been imported into RStudio for processing using the R programming language and tools. 
+Data from the 'Education Scorecard' dataset has been imported into RStudio for processing using the R programming language and tools.  
 
 ### 2. Model Planning and Building
 
