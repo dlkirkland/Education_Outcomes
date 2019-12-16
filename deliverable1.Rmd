@@ -27,10 +27,6 @@ library(tidyverse)
 
 library(dplyr)
 
-#Create an array to store the CY datasets
-datasets <- c("")
-
-
 #Read in, as tibbles, datasets for all calendar years 1996 - 2017.
 CY17 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2017_18_PP.csv", header= T, na.strings= c("NULL")))
 CY16 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2016_17_PP.csv", header= T, na.strings= c("NULL")))
@@ -56,12 +52,7 @@ CY97 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1997_98_PP.csv", hea
 CY96 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1996_97_PP.csv", header= T, na.strings= c("NULL")))
 
 ```
-The number of variables/columns in each dataset total 1,978, therefore, there are too many to list here.  But a dictionary is include which  
-
-
-
-
-
+The number of variables/columns in each dataset total 1,978, therefore, there are too many to list here.  But a data dictionary is included which describes the variables ('data dictionary' sheet), as well as the years for which values have been collected for each of the variables ('cohort' sheet). 
 
 #The datasets for each year from 1996 - 2018 (inclusive) all have the same number of columns/variables, but different
 #number of rows/observations.  Therefore, exluding CY98--which contains only 1,951 observations--the CY with the 
@@ -254,8 +245,6 @@ stDevValues <- as_tibble(stDevValues)
 
 View(meanValues)
 View(stDevValues)
-summary(mean_outcomes)
-
 
 #Convert the 'meanValues' tibble data from wide to long using 'gather()'. 
 meanValues <- gather(meanValues, Calendar_Year, Mean, CY99:CY17)
