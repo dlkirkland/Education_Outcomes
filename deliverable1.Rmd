@@ -12,6 +12,7 @@ In order to ask interesting questions about the educational outcomes of students
     power in the hands of the public - from those  
     choosing colleges to those improving colege quality - to 
     see how well different schools are serving their students." 
+    
 The goal of this data science project is to use demographics to identify potential patterns or factors which are found among those who do and do not achieve success when pursing higher education.  
 
 First, we must import the data in .csv format. As there exists historical data in separate .csv files for each year between 1996 - 2018, inclusive, a dataset for each year of interest will be imported to that more data will be available for analysis.  
@@ -20,40 +21,276 @@ First, we must import the data in .csv format. As there exists historical data i
            > create variables and store imported datasets 
 
 
-```{r results='hide'}
-  library(tidyverse)
+```{r results = 'hide'}
+install.packages("tidyverse")  
+library(tidyverse)
 
-#CY17 <- read_csv("CollegeScorecard_Raw_Data/MERGED2017_18_PP.csv")
-CY16 <- read_csv("CollegeScorecard_Raw_Data/MERGED2016_17_PP.csv")
-#CY15 <- read_csv("CollegeScorecard_Raw_Data/MERGED2015_16_PP.csv")
-#CY14 <- read_csv("CollegeScorecard_Raw_Data/MERGED2014_15_PP.csv")
-#CY13 <- read_csv("CollegeScorecard_Raw_Data/MERGED2013_14_PP.csv")
-#CY12 <- read_csv("CollegeScorecard_Raw_Data/MERGED2012_13_PP.csv")
-#CY11 <- read_csv("CollegeScorecard_Raw_Data/MERGED2011_12_PP.csv")
-#CY10 <- read_csv("CollegeScorecard_Raw_Data/MERGED2010_11_PP.csv")
-#CY09 <- read_csv("CollegeScorecard_Raw_Data/MERGED2009_10_PP.csv")
-#CY08 <- read_csv("CollegeScorecard_Raw_Data/MERGED2008_09_PP.csv")
-#CY07 <- read_csv("CollegeScorecard_Raw_Data/MERGED2007_08_PP.csv")
-#CY06 <- read_csv("CollegeScorecard_Raw_Data/MERGED2006_07_PP.csv")
-#CY05 <- read_csv("CollegeScorecard_Raw_Data/MERGED2005_06_PP.csv")
-#CY04 <- read_csv("CollegeScorecard_Raw_Data/MERGED2004_05_PP.csv")
-#CY03 <- read_csv("CollegeScorecard_Raw_Data/MERGED2003_04_PP.csv")
-#CY02 <- read_csv("CollegeScorecard_Raw_Data/MERGED2002_03_PP.csv")
-#CY01 <- read_csv("CollegeScorecard_Raw_Data/MERGED2001_02_PP.csv")
-#CY00 <- read_csv("CollegeScorecard_Raw_Data/MERGED2000_01_PP.csv")
-#CY99 <- read_csv("CollegeScorecard_Raw_Data/MERGED1999_00_PP.csv")
-#CY98 <- read_csv("CollegeScorecard_Raw_Data/MERGED1998_99_PP.csv")
-#CY97 <- read_csv("CollegeScorecard_Raw_Data/MERGED1997_98_PP.csv")
-#CY96 <- read_csv("CollegeScorecard_Raw_Data/MERGED1996_97_PP.csv")
+library(dplyr)
+
+#Create an array to store the CY datasets
+datasets <- c("")
+
+
+#Read in, as tibbles, datasets for all calendar years 1996 - 2017.
+CY17 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2017_18_PP.csv", header= T, na.strings= c("NULL")))
+CY16 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2016_17_PP.csv", header= T, na.strings= c("NULL")))
+CY15 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2015_16_PP.csv", header= T, na.strings= c("NULL")))
+CY14 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2014_15_PP.csv", header= T, na.strings= c("NULL")))
+CY13 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2013_14_PP.csv", header= T, na.strings= c("NULL")))
+CY12 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2012_13_PP.csv", header= T, na.strings= c("NULL")))
+CY11 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2011_12_PP.csv", header= T, na.strings= c("NULL")))
+CY10 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2010_11_PP.csv", header= T, na.strings= c("NULL")))
+CY09 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2009_10_PP.csv", header= T, na.strings= c("NULL")))
+CY08 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2008_09_PP.csv", header= T, na.strings= c("NULL")))
+CY07 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2007_08_PP.csv", header= T, na.strings= c("NULL")))
+CY06 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2006_07_PP.csv", header= T, na.strings= c("NULL")))
+CY05 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2005_06_PP.csv", header= T, na.strings= c("NULL")))
+CY04 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2004_05_PP.csv", header= T, na.strings= c("NULL")))
+CY03 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2003_04_PP.csv", header= T, na.strings= c("NULL")))
+CY02 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2002_03_PP.csv", header= T, na.strings= c("NULL")))
+CY01 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2001_02_PP.csv", header= T, na.strings= c("NULL")))
+CY00 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED2000_01_PP.csv", header= T, na.strings= c("NULL")))
+CY99 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1999_00_PP.csv", header= T, na.strings= c("NULL")))
+CY98 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1998_99_PP.csv", header= T, na.strings= c("NULL")))
+CY97 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1997_98_PP.csv", header= T, na.strings= c("NULL")))
+CY96 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1996_97_PP.csv", header= T, na.strings= c("NULL")))
+
+```
+The number of variables/columns in each dataset total 1,978, therefore, there are too many to list here.  But a dictionary is include which  
+
+
+
+
+
+
+#The datasets for each year from 1996 - 2018 (inclusive) all have the same number of columns/variables, but different
+#number of rows/observations.  Therefore, exluding CY98--which contains only 1,951 observations--the CY with the 
+#lowest of observations will be selected for comparison against all other CY datasets. This comparison dataset, 
+#CY99 with 6,466 observations, more closely matches the observation count of the remaining datasets, which is between
+#6,478 and 7804.  Since CY99 has less observations than subsequent CY datasets,  we can have AT MOST 6,466 observations
+#spanning across all CY datasets. We want to compare values for the same observations over all calendar years, so we 
+#must identify which observations appear in all datasets.  We must evaluate each dataset to determine which observations are common among the datasets. Once the most common observations among datasets have been found, the datasets will be merged together. 
+
+```{r}
+#First, we want to see which observations in CY99 are not found in CY17. 
+#Let's identify the primary key in a few datasets, which should not contain any duplicates. 
+duplicates99 <- CY99$UNITID[duplicated(CY99$UNITID)]
+
+View(duplicates99)
+
+duplicates13 <- CY13$UNITID[duplicated(CY13$UNITID)]
+
+View(duplicates13)
+
+
+#The datasets contain no duplicate entries for the UNITID variable. Since each observation 
+#within the datasets will have a unique UNITID value, this variable will used for comparison. 
+#Here, observing the number of values for the UNITID variable in CY99 which are not found in CY17. 
+differences17 <- CY99$UNITID[!CY99$UNITID %in% CY17$UNITID]
+#Count the missing observations.
+length(differences17)
+
+#Let's repeat this process and evaluate all remaining CY datasets against CY99. Recall that the value of 
+#differencesXX is the number of observations in CY99 which are not found in CYXX.  
+differences16 <- CY99$UNITID[!CY99$UNITID %in% CY16$UNITID]
+length(differences16)
+
+differences15 <- CY99$UNITID[!CY99$UNITID %in% CY15$UNITID]
+length(differences15)
+
+differences14 <- CY99$UNITID[!CY99$UNITID %in% CY14$UNITID]
+length(differences14)
+
+differences13 <- CY99$UNITID[!CY99$UNITID %in% CY13$UNITID]
+length(differences13)
+
+differences12 <- CY99$UNITID[!CY99$UNITID %in% CY12$UNITID]
+length(differences12)
+
+differences11 <- CY99$UNITID[!CY99$UNITID %in% CY11$UNITID]
+length(differences11)
+
+differences10 <- CY99$UNITID[!CY99$UNITID %in% CY10$UNITID]
+length(differences10)
+
+differences09 <- CY99$UNITID[!CY99$UNITID %in% CY09$UNITID]
+length(differences09)
+
+differences08 <- CY99$UNITID[!CY99$UNITID %in% CY08$UNITID]
+length(differences08)
+
+differences07 <- CY99$UNITID[!CY99$UNITID %in% CY07$UNITID]
+length(differences07)
+
+differences06 <- CY99$UNITID[!CY99$UNITID %in% CY06$UNITID]
+length(differences06)
+
+differences05 <- CY99$UNITID[!CY99$UNITID %in% CY05$UNITID]
+length(differences05)
+
+differences04 <- CY99$UNITID[!CY99$UNITID %in% CY04$UNITID]
+length(differences04)
+
+differences03 <- CY99$UNITID[!CY99$UNITID %in% CY03$UNITID]
+length(differences03)
+
+differences02 <- CY99$UNITID[!CY99$UNITID %in% CY02$UNITID]
+length(differences02)
+
+differences01 <- CY99$UNITID[!CY99$UNITID %in% CY01$UNITID]
+length(differences01)
+
+differences00 <- CY99$UNITID[!CY99$UNITID %in% CY00$UNITID]
+length(differences00)
+
+```
+We need to evaluate each of the datasets in this same manner, seeking one to which all others may be joined.  The 'master'
+dataset selected will be that whose observations are most present in all other datasets.  It is obvious that performing the 
+process above will not be efficient.  Therefore, we will implement the process using a 'for' loop.  The 'for' loop will 
+select a dataset and evaluate all others against it using the same logic as seen above.  The results will be stored in two 
+separate lists.  
+
+The first list, 'outcomes' will contain data in the form: 
+      
+      '<name of candidate dataset>:<number of observations in candidate dataset which are not in evaluated dataset>'
+      
+The second list, 'mean_outcomes' will be used to calculate the average, minimum, and maximum number of observations absent from all datasets, which are present in the candidate dataset.
+
+```{r}       
+#Create a list of the datasets. 
+datasets <- list(CY99, CY00, CY01, CY02, CY03, CY04, CY05, CY06, CY07, CY08, CY09, CY10, CY11, CY12, CY13, CY14, CY15, CY16, CY17)
+
+#Create a list of the dataset names, which will be used to populate the first element in the 'results' array for each dataset evaluated
+dataset_names <- c("CY99", "CY00", "CY01", "CY02", "CY03", "CY04", "CY05", "CY06", "CY07", "CY08", "CY09", "CY10", "CY11", "CY12", "CY13", "CY14", "CY15", "CY16", "CY17")
+
+
+#Create an array to store the final outcome, which will be a list of lists.  Each list in the 'outcome' array will contain as it's
+#first element the name of the CYXX year that all other datasets are being compared against, and subsequent elements will contain
+#the number of observations in the comparison year which are not found in the other CY datasets. A new element (list) is added to 
+#'outcomes' at each iteration of 'i'.  
+outcomes <- list(1)
+
+#Create an array to store only numeric values of observations found so that arithmentic functions can later be performed on the data
+mean_outcomes <- list(1)
+
+#Create an array for intermediate use within the nested 'for' loop called 'results'.  The results array, at each iteration of
+#of 'j', will be updated to include the number of observations in the jth dataset which are not in the ith dataset being evaluated. 
+#Each new result will be stored as a new element in 'results' in the form:  "CY<XX>:<number of observations>"
+results <- c("")
+
+#Create an array to be used for calculating mean and/or summing of total observations present in ith, but absent in jth datasets.  
+mean_results <- list(1)
+
+#For each dataset from CY99 to CY17
+N <- length(datasets)
+for(i in 1:N){
+  #Populate the first element of 'results' with the name of the dataset CY which all others are being compared against. 
+  results[[1]] <- dataset_names[[i]]
+  for(j in 1:N){
+    differences <- datasets[[i]]$UNITID[!datasets[[i]]$UNITID %in% datasets[[j]]$UNITID]
+    #differences <- dataset_names[[i]]$UNITID[!dataset_names[[i]]$UNITID %in% dataset_names[[j]]$UNITID]
+    results[[j+1]] <- paste(dataset_names[[j]], length(differences), sep = ":", collapse = NULL)
+    mean_results[[j]] <- length(differences)
+    #After evaluating all datasets against the current ith dataset, push child arrays/lists to their parent array/list
+    if(j == N){
+      mean_outcomes[[i]] <- mean_results
+      outcomes[[i]] <- results
+     
+    }#if
+    
+  }#for
+
+}#for
+
+outcomes
+View(mean_outcomes)
+#An example of the data stored at each element.  We'll display the last element in both lists, CY17.
+View(outcomes[[19]])
+View(mean_outcomes[[19]])
+
+names(mean_outcomes)
+#There are no names for each of the columns of data in the 'mean_outcomes' list object.  Let's add some
+#from the 'dataset_names' array. 
+names(mean_outcomes) <- dataset_names
+names(mean_outcomes)
+
+#We'll need to convert the column data in the 'mean_outcomes' list object to type 'integer' using a 'for' loop. 
+for(i in 1:N){
+  mean_outcomes[[i]] <- as.integer(mean_outcomes[[i]])
+}
+
+#Now that the 'mean_outcomes' list object contains names for each of it's contained lists, and the values of
+#each list have been converted to integers, we must further convert the 'mean_outcomes' list object to a tibble.
+mean_outcomes <- as_tibble(mean_outcomes)
+
+```
+Now that all datasets have been evaluated, it's time to analyze the results.  We will then 
+be able to determine which of the datasets can be considered the 'master' dataset to which all others will be joined.  
+As seen in the 'cohort' sheet within the 'data dictionary' document which accompanies the datasets, values for variables
+have been recorded for specific years only.  This information will be useful later, as we can later modify the above 'for' loop 
+to evaluate the best 'master' dataset candidates for specific year spans, rather than for all years (CY99 - CY17) for which sufficient data has been recorded.  **Note: Since CY98 contains only 1,951 observations, and the next highest number of observations is 6,466 (a difference of 30%), CY96, CY97, and CY98 datasets have been excluded for continutity purposes** 
+
+```{r}
+#Let's view the summary of mean_outcomes, which will show us the "observation" quantity data we've been seeking.
+summary(mean_outcomes)
+```
+
+#This data tells us quite a lot.   Let's create some graphs for the mean and standard deviation of missing observations so we can get an even better idea of which dataset may be the best candidate for the 'master' dataset.
+
+```{r}
+#Create a list object to store the mean number of obserations found in candidate CV dataset X which were not found in evaluated dataset Y, as recorded in 'mean_outcomes'. Then determine the average amount that the number of missing observations for each CY varies from the average number of missing observations for all years evaluted against the candidate CY dataset (standard deviation from the mean).  The 'meanValues' and 'stDevValues' lists will be used to build a graph which will allow us to visualize the magnitude and variance of observations present in each candidate year, which are missing from each evaluated year.
+
+meanValues <- list(1)
+stDevValues <- list(1)
+for(i in 1:N){
+  meanValues[[i]] <- as.integer(mean(mean_outcomes[[i]]))
+  stDevValues[[i]] <- as.integer(sd(mean_outcomes[[i]]))
+}
+names(meanValues) <- dataset_names
+names(stDevValues) <- dataset_names
+
+meanValues <- as_tibble(meanValues)
+stDevValues <- as_tibble(stDevValues)
+
+View(meanValues)
+View(stDevValues)
+summary(mean_outcomes)
+
+
+#Convert the 'meanValues' tibble data from wide to long using 'gather()'. 
+meanValues <- gather(meanValues, Calendar_Year, Mean, CY99:CY17)
+View(meanValues)
+
+#Convert the 'stDevValues' tibble data from wide to long using 'gather()'. 
+stDevValues <- gather(stDevValues, Calendar_Year, Standard_Deviation_From_Mean, CY99:CY17)
+View(stDevValues)
+
+#Make a historgram for 'meanValues' and another for 'stDevValues'. First, import ggplot.
+library("ggplot2")
+```
+
+```{r}
+ggplot(meanValues, aes(x = Calendar_Year, y = Mean)) + geom_boxplot()
 
 ```
 
+```{r}
+ggplot(stDevValues, aes(x = Calendar_Year, y = Standard_Deviation_From_Mean)) + geom_boxplot()
+
+```
+#We can see that the dataset 'CY04' contains the greatest number of observations which are also found among all other datasets.  This is because the mean number of 'CY04' dataset observations missing from other datasets is the lowest among all other datasets, with a mean value of 716.6.  Additionally, the number of 'CY04' observations missing from each dataset varies from the mean number of observations less so than seen for other candidate datasets, at 453.  This means that 68% of the datasets evaluated against 'CY04' are missing less than or equal to 453 observations.  Now that we've identified our 'master' dataset it's time to join all other datasets to 'CY04' where matching 'OPEID' values are present.  
+```{r}
+
+```
+```{r}
+    
+
+```
 
 Each of the datasets, for each respective year, has identical column names.  For the purposes of the inquiries which will be made of the datasets, a majority of the column names included in the raw dataset will be excluded by building a tibble which includes the column variables of interest.  
 
 ```{r}
-nrow(CY16)
-ncol(CY16)
+
 
 ```
 
