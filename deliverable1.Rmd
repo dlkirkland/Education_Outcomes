@@ -54,13 +54,13 @@ CY96 <- as_tibble(read.csv("CollegeScorecard_Raw_Data/MERGED1996_97_PP.csv", hea
 ```
 The number of variables/columns in each dataset total 1,978, therefore, there are too many to list here.  But a data dictionary is included which describes the variables ('data dictionary' sheet), as well as the years for which values have been collected for each of the variables ('cohort' sheet). 
 
-#The datasets for each year from 1996 - 2018 (inclusive) all have the same number of columns/variables, but different
-#number of rows/observations.  Therefore, exluding CY98--which contains only 1,951 observations--the CY with the 
-#lowest of observations will be selected for comparison against all other CY datasets. This comparison dataset, 
-#CY99 with 6,466 observations, more closely matches the observation count of the remaining datasets, which is between
-#6,478 and 7804.  Since CY99 has less observations than subsequent CY datasets,  we can have AT MOST 6,466 observations
-#spanning across all CY datasets. We want to compare values for the same observations over all calendar years, so we 
-#must identify which observations appear in all datasets.  We must evaluate each dataset to determine which observations are common among the datasets. Once the most common observations among datasets have been found, the datasets will be merged together. 
+The datasets for each year from 1996 - 2018 (inclusive) all have the same number of columns/variables, but different
+number of rows/observations.  Therefore, exluding CY98--which contains only 1,951 observations--the CY with the 
+lowest of observations will be selected for comparison against all other CY datasets. This comparison dataset, 
+CY99 with 6,466 observations, more closely matches the observation count of the remaining datasets, which is between
+6,478 and 7804.  Since CY99 has less observations than subsequent CY datasets,  we can have AT MOST 6,466 observations
+spanning across all CY datasets. We want to compare values for the same observations over all calendar years, so we 
+must identify which observations appear in all datasets.  We must evaluate each dataset to determine which observations are common among the datasets. Once the most common observations among datasets have been found, the datasets will be merged together. 
 
 ```{r}
 #First, we want to see which observations in CY99 are not found in CY17. 
@@ -135,17 +135,13 @@ differences00 <- CY99$UNITID[!CY99$UNITID %in% CY00$UNITID]
 length(differences00)
 
 ```
-We need to evaluate each of the datasets in this same manner, seeking one to which all others may be joined.  The 'master'
-dataset selected will be that whose observations are most present in all other datasets.  It is obvious that performing the 
-process above will not be efficient.  Therefore, we will implement the process using a 'for' loop.  The 'for' loop will 
-select a dataset and evaluate all others against it using the same logic as seen above.  The results will be stored in two 
-separate lists.  
+Although we need to evaluate each of the datasets to find the 'master' dataset--whose observations are most present in all other datasets--it is obvious that performing the process above will not be efficient.  Therefore, we will implement the process using a 'for' loop.  The 'for' loop will select a dataset and evaluate all others against it using the same logic as seen above.  The results will be stored in two separate lists.  
 
 The first list, 'outcomes' will contain data in the form: 
       
       '<name of candidate dataset>:<number of observations in candidate dataset which are not in evaluated dataset>'
       
-The second list, 'mean_outcomes' will be used to calculate the average, minimum, and maximum number of observations absent from all datasets, which are present in the candidate dataset.
+The second list, 'mean_outcomes' will store the values which will be later used to perform a 'summary(...)' of the observations.  The 'mean_outcomes' data will also be referenced later when we calculate the mean and standard deviation of observations across all dataset evaluations.  
 
 ```{r}       
 #Create a list of the datasets. 
@@ -217,16 +213,14 @@ mean_outcomes <- as_tibble(mean_outcomes)
 ```
 Now that all datasets have been evaluated, it's time to analyze the results.  We will then 
 be able to determine which of the datasets can be considered the 'master' dataset to which all others will be joined.  
-As seen in the 'cohort' sheet within the 'data dictionary' document which accompanies the datasets, values for variables
-have been recorded for specific years only.  This information will be useful later, as we can later modify the above 'for' loop 
-to evaluate the best 'master' dataset candidates for specific year spans, rather than for all years (CY99 - CY17) for which sufficient data has been recorded.  **Note: Since CY98 contains only 1,951 observations, and the next highest number of observations is 6,466 (a difference of 30%), CY96, CY97, and CY98 datasets have been excluded for continutity purposes** 
+As seen in the 'cohort' sheet within the 'data dictionary' document which accompanies the datasets, values for variables have been recorded for specific years only.  This information will be useful later, as we can later modify the above 'for' loop to evaluate the best 'master' dataset candidates for specific year spans, rather than for all years (CY99 - CY17) for which sufficient data has been recorded.  **Note: Since CY98 contains only 1,951 observations, and the next highest number of observations--found in CY99--is 6,466 (a difference of 30%).  Therefore CY96, CY97, and CY98 datasets have been excluded from evaluation for continutity purposes** 
 
 ```{r}
 #Let's view the summary of mean_outcomes, which will show us the "observation" quantity data we've been seeking.
 summary(mean_outcomes)
 ```
 
-#This data tells us quite a lot.   Let's create some graphs for the mean and standard deviation of missing observations so we can get an even better idea of which dataset may be the best candidate for the 'master' dataset.
+This data tells us quite a lot.   Let's create some graphs for the mean and standard deviation of missing observations so we can observe another representation of our evaluation results. 
 
 ```{r}
 #Create a list object to store the mean number of obserations found in candidate CV dataset X which were not found in evaluated dataset Y, as recorded in 'mean_outcomes'. Then determine the average amount that the number of missing observations for each CY varies from the average number of missing observations for all years evaluted against the candidate CY dataset (standard deviation from the mean).  The 'meanValues' and 'stDevValues' lists will be used to build a graph which will allow us to visualize the magnitude and variance of observations present in each candidate year, which are missing from each evaluated year.
@@ -267,19 +261,84 @@ ggplot(meanValues, aes(x = Calendar_Year, y = Mean)) + geom_boxplot()
 ggplot(stDevValues, aes(x = Calendar_Year, y = Standard_Deviation_From_Mean)) + geom_boxplot()
 
 ```
-#We can see that the dataset 'CY04' contains the greatest number of observations which are also found among all other datasets.  This is because the mean number of 'CY04' dataset observations missing from other datasets is the lowest among all other datasets, with a mean value of 716.6.  Additionally, the number of 'CY04' observations missing from each dataset varies from the mean number of observations less so than seen for other candidate datasets, at 453.  This means that 68% of the datasets evaluated against 'CY04' are missing less than or equal to 453 observations.  Now that we've identified our 'master' dataset it's time to join all other datasets to 'CY04' where matching 'OPEID' values are present.  
+We can see that the dataset 'CY04' contains the greatest number of observations which are also found among all other datasets.  This is because the mean number of 'CY04' dataset observations missing from other datasets is the lowest among all other datasets, with a mean value of 716.6.  Additionally, the number of 'CY04' observations missing from each dataset varies from the mean number of observations less so than seen for other candidate datasets, at 453.  This means that 68% of the datasets evaluated against 'CY04' are missing less than or equal to 453 observations.  
+
+Now that we've identified our 'master' dataset it's time to join all other datasets to 'CY04' where matching 'OPEID' values are present.  But before we attempt to join datasets, it is necessary to ensure that the data types for the variables (columns) of each dataset are correct and consistent across all datasets.      
 ```{r}
+#For iteration, we need to have a 'dataTypes' atomic vector.  This will allow us to use them during 'for' loop iteration in which the data types of all columns in each dataset will be converted to their appropriate data types.  
+dataTypes <- c("")
+
+#Read in the data types.  From the 'CollegeScorecardDataDictionary', I have isolated the data types for each of the columns and stored in a .CSV file "data_typesWITH'as.'.csv".    
+
+dataTypesImport <- as.list(read.csv("data_typesWITH'as.'.csv", header= FALSE, na.strings= c("NULL")))
+dataTypesImport$V1 <- as.character(dataTypesImport$V1)
+for(i in 1:length(dataTypesImport[[1]])){
+  dataTypes[[i]] <- dataTypesImport$V1[[i]]
+}
+
+#Create a function which will change the data type for a column in a dataset and return the updated column.
+changeDatatype <- function(j, dataset, datatype){
+  if(datatype[[j]] == "as.double"){
+    dataset[[j]] <- as.double(dataset[[j]])
+  }
+  else if(datatype[[j]] == "as.integer"){
+    dataset[[j]] <- as.integer(dataset[[j]])
+  }
+  else if(datatype[[j]] == "as.character"){
+    dataset[[j]] <- as.character(dataset[[j]])
+  }
+  return(dataset[[j]])
+}
+
+#For each dataset stored in 'datasets', change the data type for each of it's columns to the correct type indicated in the data dictionary which accompanies the datasets. 
+for(i in 1:length(datasets)){
+  CY <- datasets[[i]]
+  for(j in 1:length(dataTypes)){
+    CY[[j]] <- changeDatatype(j, datasets[[i]], dataTypes)
+  }
+  datasets[[i]] <- CY
+}
 
 ```
+Now all datasets should be updated, with the updated versions stored as elements in the 'datasets' list.  Let's verify that the data types for the columns have been updated by comparing one of the datasets in the 'datasets' list with it's original counterpart.
+
+The CY99 dataset...
 ```{r}
-    
+#The original version...
+head(CY99)
+```
+```{r}
+#The updated version...
+head(datasets[[1]])
+```
+We see that the changes have been made.  At this time it's a good idea to make sure we store the modified datasets back into their original scalar object names.  Then, we'll have the datasets stored in list and scalar formats for future use.  
+```{r}
+CY99 <- datasets[[1]]
+CY00 <- datasets[[2]]
+CY01 <- datasets[[3]]
+CY02 <- datasets[[4]]
+CY03 <- datasets[[5]]
+CY04 <- datasets[[6]]
+CY05 <- datasets[[7]]
+CY06 <- datasets[[8]]
+CY07 <- datasets[[9]]
+CY08 <- datasets[[10]]
+CY09 <- datasets[[11]]
+CY10 <- datasets[[12]]
+CY11 <- datasets[[13]]
+CY12 <- datasets[[14]]
+CY13 <- datasets[[15]]
+CY14 <- datasets[[16]]
+CY15 <- datasets[[17]]
+CY16 <- datasets[[18]]
+CY17 <- datasets[[19]]
 
 ```
-
-Each of the datasets, for each respective year, has identical column names.  For the purposes of the inquiries which will be made of the datasets, a majority of the column names included in the raw dataset will be excluded by building a tibble which includes the column variables of interest.  
-
+Now, let's try to join each of the datasets at their intersections, starting with CY04. 
 ```{r}
-
+#Perform a join, consisting of the intersection of CY04 and CY99. 
+testMaster <- semi_join(CY99, CY04, by = c("OPEID"))
+####testMaster <- semi_join(CY99, CY04, by = OPEID)
+View(testMaster)
 
 ```
-
