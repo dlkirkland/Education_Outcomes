@@ -337,8 +337,16 @@ CY17 <- datasets[[19]]
 Now, let's try to join each of the datasets at their intersections, starting with CY04. 
 ```{r}
 #Perform a join, consisting of the intersection of CY04 and CY99. 
-testMaster <- semi_join(CY99, CY04, by = c("OPEID"))
-####testMaster <- semi_join(CY99, CY04, by = OPEID)
-View(testMaster)
+#####testMaster <- semi_join(CY99, CY04, by = c("OPEID"))
+#####testMaster <- subset(CY04, CY04$OPEID == CY99$OPEID)
+#####testMaster <- filter_all(CY99, any_vars(CY99$OPEID %in% CY04$OPEID))
+
+#Since we're finding issues with building a dataframe which contains only the rows/observations whose OPEID value is present in our 'master' CY dataset, let's take another approach and 'rbind' all of the datasets.  This will combine all rows from all datasets.  After combining, we can filter out any rows/observations from CY dataset years whose OPEID value is not found in our 'master' CY dataset, CY04. 
+combinedDatasets <- rbind(CY99, CY00, CY01, CY02, CY03, CY04, CY05, CY06, CY07, CY08, CY09, CY10, CY11, CY12, CY13, CY14, CY15, CY16, CY17)
+
+View(combinedDatasets)
+
+#Let's try to filter out any observations which are not present for all dataset years.  
+refinedCombinedDatsets <- filter()
 
 ```
